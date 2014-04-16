@@ -43,6 +43,7 @@ public class ClientThread extends Thread {
 					}
 				}
 			}
+			
 			if( sendStart ){
 				if( acceptNum==maxClientNum ){
 					sendStart = false;
@@ -53,9 +54,11 @@ public class ClientThread extends Thread {
 					}
 				}
 			}
+			
 			if( sendNum==maxClientNum ){
 				synchronized (RESET) {
 					if( finish==false ){
+						tanks.clear();//Çå¿Õ¶ÓÁÐ
 						acceptNum = 0;
 						sendNum = 0;
 						finish = true;
