@@ -15,8 +15,6 @@ public class Server extends Thread{
 	
 	private  final int PORT;
 	private  ServerSocket server;
-	public static int clientNum;
-	public static final String LOCK = "LOCK";
 	
 	
 	public Server(int port){
@@ -37,11 +35,9 @@ public class Server extends Thread{
 				
 				
 				Socket client = server.accept();
-				synchronized (LOCK) {
-					clientNum = clientNum + 1;
-				}
-				System.out.println("已链接新客户端 "+clientNum+" ip="+client.getInetAddress()+"/  端口="+client.getPort());
 				new ClientThread(client).start();
+//				System.out.println("新客户端  "+ClientThread.maxClientNum+" ip="+client.getInetAddress()+"/  端口="+client.getPort());
+				
 				
 			} catch (IOException e) {
 				e.printStackTrace();
