@@ -1,14 +1,10 @@
 package oz.server;
 
-import java.awt.Point;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import oz.bean.Tank;
 
 public class Server extends Thread{
 	
@@ -16,12 +12,18 @@ public class Server extends Thread{
 	private  final int PORT;
 	private  ServerSocket server;
 	
+	public static ArrayList<TankConnect> connect = new ArrayList<TankConnect>();
+	
+	public static final String LOCK="LOCK"; 
 	
 	public Server(int port){
 		this.PORT = port;
 		try {
+			
 			 server = new ServerSocket(PORT);
+			 new ClientAccept(server).start();
 			 System.out.println("TankServer启动！");
+			 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -31,17 +33,18 @@ public class Server extends Thread{
 	@Override
 	public void run() {
 		while(true){
+			
+			synchronized (Server.LOCK) {
+//				System.out.println("当前连接数为: "+connect.size());
+				
+			}
+			
+			
 			try {
-				
-				
-				Socket client = server.accept();
-				new ClientThread(client).start();
-//				System.out.println("新客户端  "+ClientThread.maxClientNum+" ip="+client.getInetAddress()+"/  端口="+client.getPort());
-				
-				
-			} catch (IOException e) {
+				Thread.sleep(15);
+			} catch (InterruptedException e) {
 				e.printStackTrace();
-			} 
+			}
 		}
 		
 	}
