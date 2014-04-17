@@ -42,7 +42,7 @@ public class Server extends Thread{
 				for(TankConnect tc:connects){
 					tanks.add(tc.call());
 				}
-//				System.out.println("Ì¹¿ËÊýÁ¿:"+tanks.size());
+				
 				for(TankConnect tc:connects){
 					tc.send(tanks);
 				}
