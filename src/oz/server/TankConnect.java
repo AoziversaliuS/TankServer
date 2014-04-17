@@ -12,15 +12,21 @@ public class TankConnect {
 	
 	
 	
-	Socket socket;
-	ObjectInputStream ois;
-	ObjectOutputStream oos;
+	private Socket socket;
+	private ObjectInputStream ois;
+	private ObjectOutputStream oos;
+	private int id;
 	
 	
+
+	public int getId() {
+		return id;
+	}
+
 	public TankConnect(Socket socket,int id){
 		this.socket = socket;
 		String idString = ""+id;
-		
+		this.id = id;//为了和对应的坦克id相匹配
 		try {
 			oos = new ObjectOutputStream(this.socket.getOutputStream());
 			ois = new ObjectInputStream(this.socket.getInputStream());
@@ -54,10 +60,22 @@ public class TankConnect {
 		try {
 			oos.reset();
 			oos.writeObject(tanks);
-			
+			oos.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void close(){
+		try {
+			oos.close();
+			ois.close();
+			socket.close();
+		} catch (IOException e) {
+			System.out.println("服务器关闭链接失败！");
+			e.printStackTrace();
+		}
+		
 	}
 	
 	
