@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import oz.bean.Tank;
 
@@ -15,6 +16,7 @@ public class TankConnect {
 	ObjectInputStream ois;
 	ObjectOutputStream oos;
 	
+	
 	public TankConnect(Socket socket,int id){
 		this.socket = socket;
 		String idString = ""+id;
@@ -25,6 +27,7 @@ public class TankConnect {
 			
 			oos.writeObject(idString);
 			oos.flush();
+			
 		} catch (IOException e) {
 			System.out.println("TankConnect IO³ö´í£¡");
 			e.printStackTrace();
@@ -33,12 +36,28 @@ public class TankConnect {
 	
 	public Tank call(){
 		
-		return null;
+		Tank tank = null;
+		try {
+			 tank = (Tank)ois.readObject();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return tank;
 	}
 	
 	
-	public void send(){
-		
+	public void send(ArrayList<Tank> tanks){
+		try {
+			oos.reset();
+			oos.writeObject(tanks);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

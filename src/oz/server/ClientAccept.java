@@ -24,9 +24,9 @@ public class ClientAccept extends Thread{
 				
 					System.out.println("µÈ´ýÁ¬½Ó");
 					Socket client = server.accept();
-					ClientId++;
 					synchronized (Server.LOCK) {
-						Server.connect.add(new TankConnect(client,ClientId));
+						ClientId++;
+						Server.connects.add(new TankConnect(client,ClientId));
 					}
 					Thread.sleep(500);
 				

@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import oz.bean.Tank;
+
 
 public class Server extends Thread{
 	
@@ -12,7 +14,8 @@ public class Server extends Thread{
 	private  final int PORT;
 	private  ServerSocket server;
 	
-	public static ArrayList<TankConnect> connect = new ArrayList<TankConnect>();
+	public static ArrayList<TankConnect> connects = new ArrayList<TankConnect>();
+	public static ArrayList<Tank> tanks = new ArrayList<Tank>();
 	
 	public static final String LOCK="LOCK"; 
 	
@@ -35,7 +38,16 @@ public class Server extends Thread{
 		while(true){
 			
 			synchronized (Server.LOCK) {
-//				System.out.println("当前连接数为: "+connect.size());
+				
+				for(TankConnect tc:connects){
+					tanks.add(tc.call());
+				}
+//				System.out.println("坦克数量:"+tanks.size());
+				for(TankConnect tc:connects){
+					tc.send(tanks);
+				}
+				
+				tanks.clear();
 				
 			}
 			
