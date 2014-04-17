@@ -53,7 +53,7 @@ public class Server extends Thread{
 			
 			
 			try {
-				Thread.sleep(5);
+				Thread.sleep(8);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

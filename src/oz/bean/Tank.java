@@ -3,6 +3,8 @@ package oz.bean;
 import java.awt.Point;
 import java.io.Serializable;
 
+import oz.type.DirKey;
+
 public class Tank implements Serializable{
 	
 	public static final int  WIDTH = 40;
@@ -14,7 +16,7 @@ public class Tank implements Serializable{
 	private int x;
 	private int y;
 
-	
+	private DirKey lastDir = DirKey.Up;
 
 	
 	private int     id;
@@ -35,21 +37,23 @@ public class Tank implements Serializable{
 		this.clientMessage = Tank.M_DEGFAULT;
 		this.alive = true;
 		this.hp = 100;
+		this.lastDir = DirKey.Up;
 	}
 	
 	
+
+
 	public Tank() {
 	}
 
 	
-	
-	
-	public Tank(int clientMessage, int x, int y, int id, String name,
-			boolean alive, int hp) {
+	public Tank(int clientMessage, int x, int y, DirKey lastDir, int id,
+			String name, boolean alive, int hp) {
 		super();
 		this.clientMessage = clientMessage;
 		this.x = x;
 		this.y = y;
+		this.lastDir = lastDir;
 		this.id = id;
 		this.name = name;
 		this.alive = alive;
@@ -57,6 +61,63 @@ public class Tank implements Serializable{
 	}
 
 
+
+
+	public void active(DirKey key,int speed){
+		
+		if( key!=DirKey.Else ){
+			//保存坦克方向,画图时用
+			lastDir = key;
+		}
+		
+		if( key==DirKey.Up ){
+			this.y = this.y - speed;
+		}
+		else if( key==DirKey.Down ){
+			this.y = this.y + speed;
+		}
+		else if( key==DirKey.Left ){
+			this.x = this.x - speed;
+		}
+		else if( key==DirKey.Right ){
+			this.x = this.x + speed;
+		}
+	}
+	
+
+
+	
+	
+	
+	
+
+
+	public DirKey getLastDir() {
+		return lastDir;
+	}
+
+
+
+
+	public void setLastDir(DirKey lastDir) {
+		this.lastDir = lastDir;
+	}
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public int getClientMessage() {
 		return clientMessage;
 	}
