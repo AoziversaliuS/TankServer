@@ -103,9 +103,10 @@ public class Server extends Thread{
 	public static void main(String[] args) {
 		InetAddress addr = null;
 		String ip = null;
-		String portString = JOptionPane.showInputDialog(null, "请输入服务器端口 ( 不输入则默认为9090端口 )");
-		int port = Integer.parseInt(portString);
-		
+		int port;
+////		String portString = JOptionPane.showInputDialog(null, "请输入服务器端口 ( 不输入则默认为9090端口 )");
+//		port = Integer.parseInt(portString);
+		port = 9090;
 		
 		
 		try {
