@@ -8,7 +8,7 @@ import oz.type.DirKey;
 public class Bullet implements Serializable{
 	
 	//子弹即是一个点
-	
+	private int id;
 	private int x;
 	private int y;
 	private DirKey dir;
@@ -16,25 +16,65 @@ public class Bullet implements Serializable{
 	
 	
 	
-	public Bullet(int x, int y, DirKey dir) {
+	
+	
+	
+	
+
+
+
+
+	public Bullet(int id, int x, int y, DirKey dir) {
 		super();
+		this.id = id;
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		
 		this.alive = true;
 	}
-	
-	
-	
-	
-	public Bullet(int x, int y, DirKey dir, boolean alive) {
+
+
+
+
+
+
+
+
+	public int getId() {
+		return id;
+	}
+
+
+
+
+
+
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+
+
+
+
+
+
+	public Bullet(int id, int x, int y, DirKey dir, boolean alive) {
 		super();
+		this.id = id;
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		this.alive = alive;
 	}
+
+
+
+
 
 
 
