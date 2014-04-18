@@ -1,6 +1,7 @@
 package oz.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import oz.type.DirKey;
 
@@ -56,6 +57,15 @@ public class Bullet implements Serializable{
 	}
 	
 	
+	public void hit(ArrayList<Tank> tanks){
+		for(Tank tank:tanks){
+			if(tank.hit(this)){
+				this.setAlive(false);
+			}
+		}
+	}
+	
+	
 	public void active(int speed){
 		
 		if( dir==DirKey.Up ){
@@ -69,6 +79,17 @@ public class Bullet implements Serializable{
 		}
 		else if( dir==DirKey.Right ){
 			this.x = this.x + speed;
+		}
+		
+	}
+	
+	public boolean inRange(int screenWidth,int screenHeight){
+		//ÅÐ¶Ï×Óµ¯ÊÇ·ñÔÚÆÁÄ»·¶Î§ÄÚ
+		if(this.x<screenWidth && this.y<screenHeight && this.x>0 && this.y>0 ){
+			return true;
+		}
+		else{
+			return false;
 		}
 		
 	}
