@@ -11,15 +11,21 @@ public class ClientAccept extends Thread{
 	
 	private static int ClientId;
 	
+	private boolean close = false;
+	
 	public ClientAccept(ServerSocket server){
 		this.server = server;
 //		System.out.println("ClientAccept启动");
 	}
 	
 	
+	public void close(){
+		close = true;
+	}
+	
 	@Override
 	public void run() {
-		while(true){
+		while(!close){
 			try {
 				
 					System.out.println("等待连接");

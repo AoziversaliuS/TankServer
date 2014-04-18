@@ -1,9 +1,13 @@
 package oz.server;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 import oz.bean.Tank;
 
@@ -19,13 +23,17 @@ public class Server extends Thread{
 	
 	public static final String LOCK="LOCK"; 
 	
+	public static ClientAccept clientAccept;
+	
+	private boolean close = false;
 	
 	public Server(int port){
 		this.PORT = port;
 		try {
 			
 			 server = new ServerSocket(PORT);
-			 new ClientAccept(server).start();
+			 clientAccept =  new ClientAccept(server);
+			 clientAccept.start();
 			 System.out.println("TankServer启动！");
 			 
 		} catch (IOException e) {
@@ -37,7 +45,7 @@ public class Server extends Thread{
 	@Override
 	public void run() {
 		final long SLEEP_TIME = 5;
-		while(true){
+		while(!close){
 			
 			long start = System.currentTimeMillis();
 			synchronized (Server.LOCK) {
@@ -76,6 +84,7 @@ public class Server extends Thread{
 			
 			
 			long costTime = System.currentTimeMillis() - start;
+//			System.out.println("服务器耗时："+costTime);
 			try {
 				if( SLEEP_TIME-costTime>0 ){
 					Thread.sleep(SLEEP_TIME-costTime);
@@ -86,11 +95,37 @@ public class Server extends Thread{
 		}
 		
 	}
+	public void close(){
+		close = true;
+	}
+	
 	
 	public static void main(String[] args) {
+		InetAddress addr = null;
+		String ip = null;
+		String portString = JOptionPane.showInputDialog(null, "请输入服务器端口 ( 不输入则默认为9090端口 )");
+		int port = Integer.parseInt(portString);
 		
-		Server server = new Server(9090);
+		
+		
+		try {
+			addr = InetAddress.getLocalHost();
+			ip=addr.getHostAddress().toString();
+			System.out.println("ip:"+ip);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		
+		Server server = new Server(port);
 		server.start();
+		Object[] options ={ "退出", "服务器" }; 
+		JOptionPane.showOptionDialog(null,  "服务器ip:"+ip+"   端口:"+port, "[奥茨制作] 坦克大战服务端",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+		clientAccept.close();
+		server.close();
+		System.out.println("服务器已关闭！");
+		System.exit(0);
+		
+		
 	}
 
 
