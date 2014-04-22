@@ -1,20 +1,27 @@
 package oz.server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
 import oz.bean.Tank;
+import oz.tool.Oz;
 
 public class TankConnect {
 	
 	
 	
 	private Socket socket;
-	private ObjectInputStream ois;
-	private ObjectOutputStream oos;
+//	private ObjectInputStream ois;
+//	private ObjectOutputStream oos;
+	private BufferedReader in;
+	private PrintWriter out;
+	
 	private int id;
 	
 	
@@ -28,11 +35,15 @@ public class TankConnect {
 		String idString = ""+id;
 		this.id = id;//为了和对应的坦克id相匹配
 		try {
-			oos = new ObjectOutputStream(this.socket.getOutputStream());
-			ois = new ObjectInputStream(this.socket.getInputStream());
+//			oos = new ObjectOutputStream(this.socket.getOutputStream());
+//			ois = new ObjectInputStream(this.socket.getInputStream());
+//			oos.writeObject(idString);
+//			oos.flush();
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			out = new PrintWriter(socket.getOutputStream());
 			
-			oos.writeObject(idString);
-			oos.flush();
+			out.println(idString);
+			out.flush();
 			
 		} catch (IOException e) {
 			System.out.println("TankConnect IO出错！");
@@ -44,11 +55,10 @@ public class TankConnect {
 		
 		Tank tank = null;
 		try {
-			 tank = (Tank)ois.readObject();
-			
+//			 tank = (Tank)ois.readObject();
+             String recvBuf = in.readLine();
+             tank = Oz.getTank(recvBuf);
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		
@@ -57,19 +67,21 @@ public class TankConnect {
 	
 	
 	public void send(ArrayList<Tank> tanks){
-		try {
-			oos.reset();
-			oos.writeObject(tanks);
-			oos.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//			oos.reset();
+//			oos.writeObject(tanks);
+//			oos.flush();
+			String sendBuf = Oz.tanksString(tanks);
+			out.println(sendBuf);
+			out.flush();
+			
 	}
 	
 	public void close(){
 		try {
-			oos.close();
-			ois.close();
+//			oos.close();
+//			ois.close();
+			in.close();
+			out.close();
 			socket.close();
 		} catch (IOException e) {
 			System.out.println("服务器关闭链接失败！");

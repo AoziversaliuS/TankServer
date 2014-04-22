@@ -28,8 +28,9 @@ public class ClientAccept extends Thread{
 		while(!close){
 			try {
 				
-					System.out.println("等待连接");
+					
 					Socket client = server.accept();
+					System.out.println("等待连接");
 					synchronized (Server.LOCK) {
 						ClientId++;
 						Server.connects.add(new TankConnect(client,ClientId));

@@ -73,6 +73,7 @@ public class Server extends Thread{
 					if( connects.get(i).getId()==exitId ){
 						connects.get(i).close();
 						connects.remove(i);
+						System.out.println("一个客户端退出了");
 						break;
 					}
 				}
@@ -104,11 +105,16 @@ public class Server extends Thread{
 		InetAddress addr = null;
 		String ip = null;
 		int port;
-////		String portString = JOptionPane.showInputDialog(null, "请输入服务器端口 ( 不输入则默认为9090端口 )");
-//		port = Integer.parseInt(portString);
+//		String portString = JOptionPane.showInputDialog(null, "请输入服务器端口 :");
+//
+//		
+//		if(portString!=null ){
+//			port = Integer.parseInt(portString);
+//		}
+//		else{
+//			port = 9090;
+//		}
 		port = 9090;
-		
-		
 		try {
 			addr = InetAddress.getLocalHost();
 			ip=addr.getHostAddress().toString();
