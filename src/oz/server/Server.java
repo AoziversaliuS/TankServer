@@ -54,6 +54,8 @@ public class Server extends Thread{
 					tanks.add(tc.call());
 				}
 				
+				serverLogic(tanks);
+				
 				//设置exitId
 				for(Tank tank:tanks){
 					if( tank.getClientMessage()==Tank.M_EXIT_REQUEST ){
@@ -96,6 +98,57 @@ public class Server extends Thread{
 		}
 		
 	}
+	private final int MAX_ROUND_COUNT=3;
+	private int roundNum = 0;
+	private int roundCount=MAX_ROUND_COUNT;
+	private void serverLogic(ArrayList<Tank> tanks) {
+		int survivorNum=0;
+		int serverMsg = -1;
+		if(tanks.size()>0){
+			serverMsg = tanks.get(0).getServerMsg();
+		}
+		if( serverMsg==Tank.S_ROUND_SWITCHING ){
+			for(Tank t:tanks){
+				t.setServerMsg(Tank.S_ROUND_SWITCHING);
+				t.setRoundCount(roundCount);
+				t.setRoundNum(roundNum);
+			}
+			roundCount--;
+			if( roundCount<0 ){
+				for(Tank t:tanks){
+					t.reset();
+				}
+			}
+		}
+		else if( serverMsg==Tank.S_PLAYING ){
+			for(Tank t:tanks){
+				if(!t.isDeadFinish()){
+					survivorNum++;
+					if(survivorNum>1){
+						break;
+					}
+				}
+			}
+			if( survivorNum<=1 && tanks.size()>2 ){
+				roundNum++;//进入下一回合
+				//重置计数器
+				roundCount=MAX_ROUND_COUNT;
+				
+				for(Tank t:tanks){
+						t.setServerMsg(Tank.S_ROUND_SWITCHING);
+						if( !t.isDeadFinish() ){
+							t.setType(Tank.BLACK_TANK);
+						}
+						else if( t.getType()!=Tank.OZ_TANK ){
+							t.setType(Tank.GENERAL);
+						}
+				}
+			}
+		}
+			
+	}
+	
+	
 	public void close(){
 		close = true;
 	}
