@@ -99,7 +99,7 @@ public class Server extends Thread{
 		
 	}
 	private final int MAX_ROUND_COUNT=3;
-	private int roundNum = 0;
+	private int roundNum = 1;
 	private int roundCount=MAX_ROUND_COUNT;
 	private void serverLogic(ArrayList<Tank> tanks) {
 		int survivorNum=0;
@@ -114,6 +114,7 @@ public class Server extends Thread{
 				t.setRoundNum(roundNum);
 			}
 			roundCount--;
+			
 			if( roundCount<0 ){
 				for(Tank t:tanks){
 					t.reset();
@@ -129,14 +130,15 @@ public class Server extends Thread{
 					}
 				}
 			}
-			if( survivorNum<=1 && tanks.size()>2 ){
+			if( survivorNum<=1 && tanks.size()>=2 ){
 				roundNum++;//进入下一回合
 				//重置计数器
 				roundCount=MAX_ROUND_COUNT;
 				
 				for(Tank t:tanks){
+				    	t.getBullets().clear();
 						t.setServerMsg(Tank.S_ROUND_SWITCHING);
-						if( !t.isDeadFinish() ){
+						if( !t.isDeadFinish() && t.getType()!=Tank.OZ_TANK ){
 							t.setType(Tank.BLACK_TANK);
 						}
 						else if( t.getType()!=Tank.OZ_TANK ){
